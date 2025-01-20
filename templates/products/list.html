@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Products - E-commerce Admin Panel{% endblock %}
+
+{% block header %}Products{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md mb-8 animate-fadeIn">
+    <div class="flex flex-wrap gap-4 items-center justify-between">
+        <div class="flex flex-wrap gap-4 items-center">
+            <input type="text" placeholder="Search products" class="border p-2 rounded">
+            <select class="border p-2 rounded">
+                <option>All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors duration-200">
+                <i class="fas fa-search mr-2"></i>Search
+            </button>
+        </div>
+        <div>
+            <a href="{% url 'products:product_create' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors duration-200">
+                <i class="fas fa-plus mr-2"></i>Add Product
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="bg-white p-6 rounded-lg shadow-md animate-fadeIn">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for product in products %}
+        <div class="border rounded-lg p-4">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover rounded-lg mb-4">
+            <h4 class="text-lg font-semibold">{{ product.name }}</h4>
+            <p class="text-gray-500">${{ product.price|floatformat:2 }}</p>
+            <p class="text-sm text-gray-400">{{ product.category.name }}</p>
+            <div class="mt-4 flex justify-end space-x-2">
+                <a href="{% url 'products:product_detail' product.id %}" class="text-blue-600 hover:text-blue-800"><i class="fas fa-eye"></i></a>
+                <a href="{% url 'products:product_update' product.id %}" class="text-yellow-600 hover:text-yellow-800"><i class="fas fa-edit"></i></a>
+                <a href="{% url 'products:product_delete' product.id %}" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></a>
+            </div>
+        </div>
+        {% empty %}
+        <p class="col-span-3 text-center text-gray-500">No products found.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

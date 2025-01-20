@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - E-commerce Admin Panel{% endblock %}
+
+{% block header %}Dashboard{% endblock %}
+
+{% block content %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-lg shadow-md transition-transform hover:scale-105">
+            <h3 class="text-xl font-semibold mb-4 text-gray-700">Total Sales</h3>
+            <p class="text-3xl font-bold text-indigo-600">${{ total_sales }}</p>
+            <p class="text-sm text-gray-500 mt-2">{{ sales_percentage }}% from last month</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md transition-transform hover:scale-105">
+            <h3 class="text-xl font-semibold mb-4 text-gray-700">Total Orders</h3>
+            <p class="text-3xl font-bold text-indigo-600">{{ total_orders }}</p>
+            <p class="text-sm text-gray-500 mt-2">{{ orders_percentage }}% from last month</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md transition-transform hover:scale-105">
+            <h3 class="text-xl font-semibold mb-4 text-gray-700">New Customers</h3>
+            <p class="text-3xl font-bold text-indigo-600">{{ new_customers }}</p>
+            <p class="text-sm text-gray-500 mt-2">{{ customers_percentage }}% from last month</p>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-md mb-8 animate-fadeIn">
+        <h3 class="text-xl font-semibold mb-4 text-gray-700">Products by Category</h3>
+        <div class="w-full h-[400px]">
+            <canvas id="productsByCategoryChart"></canvas>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-md animate-fadeIn">
+        <h3 class="text-xl font-semibold mb-4 text-gray-700">Recent Orders</h3>
+        <table class="w-full">
+            <thead>
+                <tr class="bg-gray-100">
+                    <th class="p-2 text-left">Order ID</th>
+                    <th class="p-2 text-left">Customer</th>
+                    <th class="p-2 text-left">Date</th>
+                    <th class="p-2 text-left">Total</th>
+                    <th class="p-2 text-left">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in recent_orders %}
+                <tr class="border-b">
+                    <td class="p-2">#{{ order.id }}</td>
+                    <td class="p-2">{{ order.customer_name }}</td>
+                    <td class="p-2">{{ order.date|date:"Y-m-d" }}</td>
+                    <td class="p-2">${{ order.total }}</td>
+                    <td class="p-2">
+                        <span class="bg-{{ order.status_color }}-200 text-{{ order.status_color }}-800 px-2 py-1 rounded text-sm">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Chart initialization
+        const ctx = document.getElementById('productsByCategoryChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Electronics', 'Clothing', 'Books', 'Home & Garden', 'Sports', 'Toys'],
+                    datasets: [{
+                        label: 'Number of Products',
+                        data: [65, 45, 30, 38, 25, 32],
+                        backgroundColor: [
+                            'rgba(99, 102, 241, 0.8)',  // Indigo (matching the sidebar)
+                            'rgba(99, 102, 241, 0.7)',
+                            'rgba(99, 102, 241, 0.6)',
+                            'rgba(99, 102, 241, 0.5)',
+                            'rgba(99, 102, 241, 0.4)',
+                            'rgba(99, 102, 241, 0.3)'
+                        ],
+                        borderColor: [
+                            'rgb(99, 102, 241)',
+                            'rgb(99, 102, 241)',
+                            'rgb(99, 102, 241)',
+                            'rgb(99, 102, 241)',
+                            'rgb(99, 102, 241)',
+                            'rgb(99, 102, 241)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+    </script>
+{% endblock %}
+

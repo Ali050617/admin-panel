@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if product %}Edit{% else %}Create{% endif %} Product - E-commerce Admin Panel{% endblock %}
+
+{% block header %}{% if product %}Edit{% else %}Create{% endif %} Product{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md animate-fadeIn">
+    <form method="post" enctype="multipart/form-data" class="space-y-4">
+        {% csrf_token %}
+        {% for field in form %}
+        <div>
+            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
+            <div class="mt-1">
+                {{ field }}
+            </div>
+            {% if field.errors %}
+            <p class="mt-2 text-sm text-red-600">{{ field.errors.0 }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <div class="flex justify-end">
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-200">
+                {% if product %}Update{% else %}Create{% endif %} Product
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

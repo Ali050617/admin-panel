@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Categories - E-commerce Admin Panel{% endblock %}
+
+{% block header %}Categories{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md mb-8 animate-fadeIn">
+    <div class="flex justify-between items-center">
+        <h3 class="text-xl font-semibold text-gray-700">All Categories</h3>
+        <a href="{% url 'categories:category_create' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors duration-200">
+            <i class="fas fa-plus mr-2"></i>Add Category
+        </a>
+    </div>
+</div>
+
+<div class="bg-white p-6 rounded-lg shadow-md animate-fadeIn">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for category in categories %}
+        <div class="border rounded-lg p-4 flex items-center justify-between">
+            <div class="flex items-center">
+                {% if category.icon %}
+                <img src="{{ category.icon.url }}" alt="{{ category.name }}" class="w-12 h-12 object-cover rounded-full mr-4">
+                {% else %}
+                <div class="w-12 h-12 bg-gray-200 rounded-full mr-4 flex items-center justify-center">
+                    <i class="fas fa-folder text-gray-400 text-2xl"></i>
+                </div>
+                {% endif %}
+                <div>
+                    <h4 class="text-lg font-semibold">{{ category.name }}</h4>
+                    <p class="text-sm text-gray-500">{{ category.products.count }} products</p>
+                </div>
+            </div>
+            <div class="flex space-x-2">
+                <a href="{% url 'categories:category_detail' category.id %}" class="text-blue-600 hover:text-blue-800"><i class="fas fa-eye"></i></a>
+                <a href="{% url 'categories:category_update' category.id %}" class="text-yellow-600 hover:text-yellow-800"><i class="fas fa-edit"></i></a>
+                <a href="{% url 'categories:category_delete' category.id %}" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></a>
+            </div>
+        </div>
+        {% empty %}
+        <p class="col-span-3 text-center text-gray-500">No categories found.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
