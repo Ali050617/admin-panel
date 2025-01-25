@@ -29,14 +29,15 @@ def order_create(request):
 def order_update(request, pk):
     order = get_object_or_404(Order, pk=pk)
     if request.method == 'POST':
-        form = OrderForm(request.POST, instance=order)
+        form = OrderForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Order updated successfully.')
             return redirect('orders:order_list')
     else:
-        form = OrderForm(instance=order)
+        form = OrderForm()
     return render(request, 'orders/form.html', {'form': form})
+
+
 
 
 def order_delete(request, pk):
